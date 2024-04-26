@@ -4,7 +4,7 @@ import Logo from './components/Logo/Logo';
 
 function App() {
   return (
-    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+    <div>
       <Navigation />
       <Logo/>
       {/*  <ImageLinkForm />*/}
