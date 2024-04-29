@@ -12,14 +12,34 @@ class App extends Component {
     super();
     this.state = {
       input: '',
-      imageUrl: ''
+      imageUrl: '',
+      box: {},
     }
   }
 
+  calculateFaceLocation = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - (clarifaiFace.right_col * width),
+      bottomRow: height - (clarifaiFace.bottom_row * height),
+    }
+  }
+
+  displayFaceBox = (box) => {
+    console.log(box);
+    this.setState({box: box});
+  }
+
   returnClarifaiRequestOptions(imgUrl) {
-    const PAT = '';
-    const USER_ID = '';
-    const APP_ID = '';
+    const PAT = '71ecd97805584d27bf042c2a23c42dae';
+    const USER_ID = 'jaques';
+    const APP_ID = 'test';
     // const MODEL_ID = 'face-detection';
     const IMAGE_URL = imgUrl;
 
@@ -63,19 +83,10 @@ class App extends Component {
         requestOptions
       )
         .then(response => response.json())
-        .then((response) => {
-            console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-            // do something with response
-          },
-        //   function (err) {
-        //     console.log('error: ', err)
-        //     // there was an error
-        //   }
-        )
+        .then((response) => this.displayFaceBox(this.calculateFaceLocation(response)))
         .catch(err => console.log(err))
     });
   }
-
 
   render() {
     return (
@@ -87,7 +98,7 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        <FaceRecognition imageUrl={this.state.imageUrl}/>
+        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
         <ParticlesBg type="cobweb" bg={true}/>
       </div>
     );
