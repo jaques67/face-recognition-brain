@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-class Register extends Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,21 +11,20 @@ class Register extends Component {
   }
 
   onNameChange = (event) => {
-    this.setState({name: event.target.value});
+    this.setState({name: event.target.value})
   }
 
   onEmailChange = (event) => {
-    this.setState({email: event.target.value});
+    this.setState({email: event.target.value})
   }
 
   onPasswordChange = (event) => {
-    this.setState({password: event.target.value});
+    this.setState({password: event.target.value})
   }
 
   onSubmitSignIn = () => {
-
     fetch('http://localhost:3000/register', {
-      method: 'POST',
+      method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         email: this.state.email,
@@ -36,7 +35,7 @@ class Register extends Component {
       .then(response => response.json())
       .then(user => {
         if (user) {
-          this.props.loadUser(user);
+          this.props.loadUser(user)
           this.props.onRouteChange('home');
         }
       })
@@ -53,28 +52,31 @@ class Register extends Component {
                 <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
                 <input
                   className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  onChange={this.onNameChange}
                   type="text"
                   name="name"
-                  id="name"/>
+                  id="name"
+                  onChange={this.onNameChange}
+                />
               </div>
               <div className="mt3">
                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                 <input
                   className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  onChange={this.onEmailChange}
                   type="email"
                   name="email-address"
-                  id="email-address"/>
+                  id="email-address"
+                  onChange={this.onEmailChange}
+                />
               </div>
               <div className="mv3">
                 <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
                 <input
                   className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  onChange={this.onPasswordChange}
                   type="password"
                   name="password"
-                  id="password"/>
+                  id="password"
+                  onChange={this.onPasswordChange}
+                />
               </div>
             </fieldset>
             <div className="">
@@ -82,7 +84,8 @@ class Register extends Component {
                 onClick={this.onSubmitSignIn}
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"
-                value="Register"/>
+                value="Register"
+              />
             </div>
           </div>
         </main>
@@ -90,4 +93,5 @@ class Register extends Component {
     );
   }
 }
+
 export default Register;

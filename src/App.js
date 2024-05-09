@@ -50,7 +50,7 @@ class App extends Component {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
       rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height),
+      bottomRow: height - (clarifaiFace.bottom_row * height)
     }
   }
 
@@ -127,7 +127,7 @@ class App extends Component {
         {this.state.route === 'home'
           ? <div>
             <Logo/>
-            <Rank/>
+            <Rank name={this.state.user.name} entries={this.state.user.entries} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
@@ -136,7 +136,7 @@ class App extends Component {
           </div>
           : (
             route === 'signin'
-              ? <Signin onRouteChange={this.onRouteChange}/>
+              ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
           )
         }
