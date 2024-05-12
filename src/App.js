@@ -9,23 +9,25 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import ParticlesBg from 'particles-bg'
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  box: {},
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  }
+}
+
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
-    }
+    this.state = initialState;
   }
 
   loadUser = (data) => {
@@ -114,10 +116,11 @@ class App extends Component {
                 id: this.state.user.id
               })
             })
-            .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count}))
-            })
+              .then(response => response.json())
+              .then(count => {
+                this.setState(Object.assign(this.state.user, {entries: count}))
+              })
+              .catch(err => console.log(err))
           }
           this.displayFaceBox(this.calculateFaceLocation(response))
         })
@@ -128,7 +131,7 @@ class App extends Component {
 
   onRouteChange = (route) => {
     if (route === 'signin') {
-      this.setState({isSignedIn: false});
+      this.setState(initialState);
     } else if (route === 'home') {
       this.setState({isSignedIn: true});
     }
@@ -143,7 +146,7 @@ class App extends Component {
         {this.state.route === 'home'
           ? <div>
             <Logo/>
-            <Rank name={this.state.user.name} entries={this.state.user.entries} />
+            <Rank name={this.state.user.name} entries={this.state.user.entries}/>
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
