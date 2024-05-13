@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import './App.css';
+import ParticlesBg from 'particles-bg'
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Navigation from './components/Navigation/Navigation';
+import Signin from './components/Signin/Signin';
+import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import Signin from './components/Signin/Signin';
-import Register from './components/Register/Register';
-import ParticlesBg from 'particles-bg'
+import './App.css';
 
 const initialState = {
   input: '',
@@ -25,8 +25,8 @@ const initialState = {
 }
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = initialState;
   }
 
@@ -60,55 +60,23 @@ class App extends Component {
     this.setState({box: box});
   }
 
-  returnClarifaiRequestOptions(imgUrl) {
-    const PAT = '';
-    const USER_ID = '';
-    const APP_ID = '';
-    // const MODEL_ID = 'face-detection';
-    const IMAGE_URL = imgUrl;
-
-    const raw = JSON.stringify({
-      "user_app_id": {
-        "user_id": USER_ID,
-        "app_id": APP_ID
-      },
-      "inputs": [
-        {
-          "data": {
-            "image": {
-              "url": IMAGE_URL
-            }
-          }
-        }
-      ]
-    });
-
-    return {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Key ' + PAT
-      },
-      body: raw
-    };
-  }
-
   onInputChange = (event) => {
     this.setState({input: event.target.value});
   }
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input}, () => {
-      const requestOptions = this.returnClarifaiRequestOptions(this.state.imageUrl);
-      fetch(
-        "https://api.clarifai.com/v2/models/" +
-        'face-detection' +
-        "/outputs",
-        requestOptions
-      )
+      fetch('http://localhost:3000/imageurl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input
+        })
+      })
         .then(response => response.json())
         .then(response => {
           if (response) {
+            this.displayFaceBox(this.calculateFaceLocation(response))
             fetch('http://localhost:3000/image', {
               method: 'put',
               headers: {'Content-Type': 'application/json'},
@@ -122,9 +90,7 @@ class App extends Component {
               })
               .catch(err => console.log(err))
           }
-          this.displayFaceBox(this.calculateFaceLocation(response))
         })
-        // .then((response) => this.displayFaceBox(this.calculateFaceLocation(response)))
         .catch(err => console.log(err))
     });
   }
